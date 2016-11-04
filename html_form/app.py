@@ -5,9 +5,9 @@ from werkzeug import generate_password_hash, check_password_hash
 app = Flask(__name__)
 
 mysql = MySQL()
-app.config['MYSQL_DATABASE_USER'] = 'newuser'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'abcd1234'
-app.config['MYSQL_DATABASE_DB'] = 'Bucketlist'
+app.config['MYSQL_DATABASE_USER'] = '<enter_your_username>'
+app.config['MYSQL_DATABASE_PASSWORD'] = '<enter_your_password>'
+app.config['MYSQL_DATABASE_DB'] = '<enter_name_of_database>'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 conn = mysql.connect()
