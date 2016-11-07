@@ -1,0 +1,52 @@
+# table creation ->
+# bigint signed has a max value of 9223372036854775807
+# assumptions -> username is unique as no one can have the same email id
+
+CREATE TABLE tbl_user (
+  user_id BIGINT UNIQUE AUTO_INCREMENT,
+  user_name VARCHAR(200) NULL,
+  user_username VARCHAR(200) NULL,
+  user_password VARCHAR(200) NULL,
+  PRIMARY KEY (user_id));
+
+# first procedure ->
+# the 1 in select is a return value
+
+DELIMITER $$
+CREATE DEFINER=`b5d1f3b4bcfd6d`@`%` PROCEDURE `sp_createUser`(
+    IN p_name VARCHAR(200),
+    IN p_username VARCHAR(200),
+    IN p_password VARCHAR(200)
+)
+BEGIN
+    if (select exists (select 1 from tbl_user where user_username = p_username)) THEN
+        select 'Username Exists !!';
+
+    ELSE
+        insert into tbl_user
+        (
+            user_name,
+            user_username,
+            user_password
+        )
+        values
+        (
+            p_name,
+            p_username,
+            p_password
+        );
+
+    END IF;
+END$$
+DELIMITER ;
+
+# validateLogin checks whether username of the user entering credentials and
+# any one username in the table match
+DELIMITER $$
+CREATE DEFINER=`b5d1f3b4bcfd6d`@`%` PROCEDURE `sp_validateLogin`(
+IN p_username VARCHAR(200)
+)
+BEGIN
+    select * from tbl_user where user_username = p_username;
+END$$
+DELIMITER ;
