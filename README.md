@@ -32,8 +32,11 @@ Add the venv and .env to the .gitignore file.
 Give examples
 ```
 Create tables and stored procedures according to instructions in mysql_commands.txt
-
-Provide examples of project deployment.
+Push app to heroku and git.
+```
+git push origin master
+git subtree push --prefix html_form heroku master
+```
 ## API Reference
 Template
 
