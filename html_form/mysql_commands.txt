@@ -50,3 +50,47 @@ BEGIN
     select * from tbl_user where user_username = p_username;
 END$$
 DELIMITER ;
+
+# create a new table for storing user wishes
+CREATE TABLE tbl_wish (
+  wish_id BIGINT UNIQUE AUTO_INCREMENT,
+  wish_title varchar(200) DEFAULT NULL,
+  wish_description varchar(5000) DEFAULT NULL,
+  wish_user_id BIGINT DEFAULT NULL,
+  wish_date datetime DEFAULT NULL,
+  PRIMARY KEY (wish_id)
+);
+
+# next a stored procedure for adding items to the wish table
+DELIMITER $$
+CREATE DEFINER=`b5d1f3b4bcfd6d`@`%` PROCEDURE `sp_addWish`(
+    IN p_title varchar(200),
+    IN p_description varchar(5000),
+    IN p_user_id bigint
+)
+BEGIN
+    insert into tbl_wish(
+        wish_title,
+        wish_description,
+        wish_user_id,
+        wish_date
+    )
+    values
+    (
+        p_title,
+        p_description,
+        p_user_id,
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+# this is a stored procedure for retrieving a wish
+DELIMITER $$
+CREATE PROCEDURE `sp_GetWishByUser` (
+IN p_user_id bigint
+)
+BEGIN
+    select * from tbl_wish where wish_user_id = p_user_id;
+END$$
+DELIMITER ;
