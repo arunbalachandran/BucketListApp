@@ -1,11 +1,14 @@
 # table creation ->
 # bigint signed has a max value of 9223372036854775807
 # assumptions -> username is unique as no one can have the same email id
+# username i.e. email ids have a 254 character limit in size
+# and anything larger than that shouldn't be accepted
+# Email id validation cannot be done; only possible way is to send a conf. mail
 
 CREATE TABLE tbl_user (
   user_id BIGINT UNIQUE AUTO_INCREMENT,
   user_name VARCHAR(200) NULL,
-  user_username VARCHAR(200) NULL,
+  user_username VARCHAR(254) NULL,
   user_password VARCHAR(200) NULL,
   PRIMARY KEY (user_id));
 
@@ -15,7 +18,7 @@ CREATE TABLE tbl_user (
 DELIMITER $$
 CREATE DEFINER=`b5d1f3b4bcfd6d`@`%` PROCEDURE `sp_createUser`(
     IN p_name VARCHAR(200),
-    IN p_username VARCHAR(200),
+    IN p_username VARCHAR(254),
     IN p_password VARCHAR(200)
 )
 BEGIN
@@ -44,7 +47,7 @@ DELIMITER ;
 # any one username in the table match
 DELIMITER $$
 CREATE DEFINER=`b5d1f3b4bcfd6d`@`%` PROCEDURE `sp_validateLogin`(
-IN p_username VARCHAR(200)
+IN p_username VARCHAR(254)
 )
 BEGIN
     select * from tbl_user where user_username = p_username;

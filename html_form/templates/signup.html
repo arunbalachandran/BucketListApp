@@ -9,7 +9,6 @@
   </head>
 
   <body>
-
     <div class="container">
       <div class="header">
         <nav>
@@ -29,10 +28,13 @@
           <input type="name" name="inputName" id="inputName" class="form-control" placeholder="Name" required autofocus>
           <label for="inputEmail" class="sr-only">Email address</label>
           <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+          <span id="invemail" style="display: none;">
+            Sorry, but it seems like you've entered an invalid email address
+          </span>
           <label for="inputPassword" class="sr-only">Password</label>
           <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
           <!-- Can we redirect this somewhere else? -->
-          <button onclick="location.href = '/';" id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+          <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
         </form>
       </div>
       <footer class="footer">

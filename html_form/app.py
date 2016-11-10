@@ -3,9 +3,10 @@ from flaskext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from flask import session  # to stop unauthorized access
 import os
+import re
 # for debugging only
-# import sys
-
+import sys
+email_validator = re.compile('[^@]+@[^@]+\.[^@]+')
 app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 mysql = MySQL()
@@ -48,7 +49,7 @@ def signUp():
 def showSignin():
     return render_template('signin.html')
 
-@app.route('/validateLogin',methods=['POST'])
+@app.route('/validateLogin', methods=['POST'])
 def validateLogin():
     try:
         _username = request.form['inputEmail']
@@ -86,7 +87,7 @@ def userHome():
 def showAddWish():
     return render_template('addWish.html')
 
-@app.route('/addWish',methods=['POST'])
+@app.route('/addWish', methods=['POST'])
 def addWish():
     try:
         if session.get('user'):
@@ -95,7 +96,7 @@ def addWish():
             _user = session.get('user')
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('sp_addWish',(_title,_description,_user))
+            cursor.callproc('sp_addWish', (_title, _description, _user))
             data = cursor.fetchall()
             if len(data) is 0:
                 conn.commit()
@@ -129,7 +130,10 @@ def getWish():
                     'Title': wish[1],
                     'Description': wish[2],
                     'Date': wish[4]}
-            wishes_dict.append(wish_dict)
+                wishes_dict.append(wish_dict)
+            print wishes_dict
+            print 'py code here'
+            sys.stdout.flush()
             return json.dumps(wishes_dict)
         else:
             return render_template('error.html', error = 'Unauthorized Access')
@@ -138,7 +142,7 @@ def getWish():
 
 @app.route('/logout')
 def logout():
-    session.pop('user',None)
+    session.pop('user', None)
     return redirect('/')
 
 if __name__ == '__main__':
@@ -147,3 +151,4 @@ if __name__ == '__main__':
     sys.stdout.flush()
     # does the app reach here
     cursor.close()
+    conn.close()
