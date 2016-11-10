@@ -19,7 +19,7 @@ j$(function() {
         // Create a session variable that will track error
         else {
             console.log("Toggle span id here");
-            j$('#invemail').toggle();
+            j$("#invemail").show();
             console.log("Invalid email -> too long!")
         }
     });

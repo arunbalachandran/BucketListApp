@@ -146,7 +146,7 @@ def logout():
     return redirect('/')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='localhost', port='5000')
     print 'app is done here'
     sys.stdout.flush()
     # does the app reach here
