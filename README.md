@@ -23,9 +23,21 @@ And if you mess up ...
 ```
 heroku config:unset SECRET_KEY
 ```
+View list of procedures using
+```
+show procedure status;
+```
 Use pip to install from dependencies the requirements file.
 ```
 pip install -r requirements.txt
+```
+Test locally by first setting the .env files to be used by your virtual environment
+```
+export $(cat .env | xargs)
+```
+and by setting app to localhost settings
+```
+app.run(host='localhost', port=5000)
 ```
 Add the venv and .env to the .gitignore file.
 ```

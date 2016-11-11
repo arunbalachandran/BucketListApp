@@ -6,6 +6,12 @@
     <link href="../static/css/jumbotron-narrow.css" rel="stylesheet">
     <script src="../static/js/jquery-3.1.1.js"></script>
     <script src="../static/js/signUp.js"></script>
+    <script type="text/javascript">
+      // to initially hide span
+      j$(document).ready(function() {
+        j$("#invemail").hide();
+      });
+    </script>
   </head>
 
   <body>
@@ -34,7 +40,7 @@
           <label for="inputPassword" class="sr-only">Password</label>
           <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
           <!-- Can we redirect this somewhere else? -->
-          <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+          <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button" style="margin-top: 15px;">Sign up</button>
         </form>
       </div>
       <footer class="footer">

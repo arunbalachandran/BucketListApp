@@ -5,7 +5,7 @@ from flask import session  # to stop unauthorized access
 import os
 import re
 # for debugging only
-import sys
+# import sys
 email_validator = re.compile('[^@]+@[^@]+\.[^@]+')
 app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
@@ -131,9 +131,6 @@ def getWish():
                     'Description': wish[2],
                     'Date': wish[4]}
                 wishes_dict.append(wish_dict)
-            print wishes_dict
-            print 'py code here'
-            sys.stdout.flush()
             return json.dumps(wishes_dict)
         else:
             return render_template('error.html', error = 'Unauthorized Access')
@@ -146,9 +143,6 @@ def logout():
     return redirect('/')
 
 if __name__ == '__main__':
-    app.run(host='localhost', port='5000')
-    print 'app is done here'
-    sys.stdout.flush()
-    # does the app reach here
+    app.run()
     cursor.close()
     conn.close()
