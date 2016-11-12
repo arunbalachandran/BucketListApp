@@ -6,6 +6,7 @@
     <link href="../static/css/jumbotron-narrow.css" rel="stylesheet">
     <link href="../static/css/signup.css" rel="stylesheet">
     <script src="../static/js/jquery-3.1.1.js"></script>
+    <script src="../static/js/signIn.js"></script>
   </head>
 
   <body>
@@ -24,12 +25,15 @@
 
       <div class="jumbotron">
         <h1>Bucket List App</h1>
-        <form class="form-signin" action="/validateLogin" method="post">
+        <form class="form-signin" method="POST" id="signinForm" action="/dummyroute">
           <label for="inputEmail" class="sr-only">Email address</label>
           <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
           <label for="inputPassword" class="sr-only">Password</label>
           <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
-          <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          <button id="btnSignIn" class="btn btn-lg btn-primary btn-block">Sign in</button>
+          <span id="loginmail">
+            Sorry, but it seems like you've entered an invalid email address/password combination.
+          </span>
         </form>
       </div>
 

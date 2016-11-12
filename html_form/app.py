@@ -1,26 +1,25 @@
-from flask import Flask, request, render_template, json, redirect
+from flask import Flask, request, render_template, json, redirect, jsonify
 from flaskext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from flask import session  # to stop unauthorized access
+import json
 import os
 import re
 # for debugging only
-# import sys
+import sys
 email_validator = re.compile('[^@]+@[^@]+\.[^@]+')
 app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 mysql = MySQL()
-# how to do this using files for production?
-# is this it?
-# here os.environ should represent the heroku environ
+# this is the heroku environment
 db_url = os.environ['CLEARDB_DATABASE_URL'].split('//')
 app.config['MYSQL_DATABASE_USER'] = db_url[1].split(':')[0]
 app.config['MYSQL_DATABASE_PASSWORD'] = db_url[1].split(':')[1].split('@')[0]
 app.config['MYSQL_DATABASE_DB'] = db_url[1].split(':')[1].split('@')[1].split('/')[1].split('?')[0]
 app.config['MYSQL_DATABASE_HOST'] = db_url[1].split(':')[1].split('@')[1].split('/')[0]
 mysql.init_app(app)
-conn = mysql.connect()
-cursor = conn.cursor()
+# conn = mysql.connect()
+# cursor = conn.cursor()
 
 @app.route('/')
 def index():
@@ -32,18 +31,39 @@ def showSignUp():
 
 @app.route('/signUp', methods=['POST'])
 def signUp():
+    conn = mysql.connect()
+    cursor = conn.cursor()
     _name = request.form['inputName']
     _email = request.form['inputEmail']
     _password = request.form['inputPassword']
     _hashed_password = generate_password_hash(_password)
-    cursor.callproc('sp_createUser', (_name, _email, _hashed_password))
+    print 'Trying to create user ', _email
+    # first verify if he/she doesn't exist
+    cursor.callproc('sp_validateLogin', (_email,))
     data = cursor.fetchall()
+    print 'validation result', data
+    # user doesn't exist
+    try:
+        if (len(data) <= 0):
+            cursor.callproc('sp_createUser', (_name, _email, _hashed_password))
+            data = cursor.fetchall()
+            if len(data) is 0:
+                conn.commit()
+                return json.dumps({'success':'User created successfully'}), 200, {'ContentType':'application/json'}
+            # problem in creation
+            else:
+                return json.dumps({'error':str(data[0])}), 409, {'ContentType':'application/json'}
+        # user (email id) already exists
+        else:
+            return json.dumps({'error':str(data[0])}), 409, {'ContentType':'application/json'}
 
-    if len(data) is 0:
-        conn.commit()
-        return json.dumps({'message': 'User created successfully !'})
-    else:
-        return json.dumps({'error': str(data[0])})
+    # try converting to from if else to try except case
+    except:
+        print 'error'
+    finally:
+        cursor.close()
+        conn.close()
+
 
 @app.route('/showSignin')
 def showSignin():
@@ -51,32 +71,52 @@ def showSignin():
 
 @app.route('/validateLogin', methods=['POST'])
 def validateLogin():
+    error = 'Wrong email address or password'
+    correct_user = 'Correct User'
     try:
         _username = request.form['inputEmail']
         _password = request.form['inputPassword']
         # different from the cursor used for signup
+        print 'Received data'
+        print _username, _password
         con = mysql.connect()
         cursor = con.cursor()
+        # checks for the existence of a user
         cursor.callproc('sp_validateLogin', (_username,))
         data = cursor.fetchall()
         if (len(data) > 0):
             if check_password_hash(str(data[0][3]), _password):
                 session['user'] = data[0][0]
-                return redirect('/userHome')
+                print 'Correct user'
+                sys.stdout.flush()
+                print jsonify(success=1, output=correct_user, error=error)
+                sys.stdout.flush()
+                print 'blah'
+                sys.stdout.flush()
+                return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+            # not a valid password
             else:
-                return render_template('error.html', error = 'Wrong Email address or Password.')
-        else:
-            return render_template('error.html', error = 'Wrong Email address or Password.')
+                print 'invalid password'
+                return json.dumps({'error':True}), 400, {'ContentType':'application/json'}
 
+        # not a valid username
+        else:
+            print 'invalid username'
+            return json.dumps({'error':True}), 400, {'ContentType':'application/json'}
+    # nothing was entered perhaps?
     except Exception as e:
-        return render_template('error.html', error = str(e))
+        print 'There was an exception ', e
+        return json.dumps({"error": error}), 400
+        # is this correct?
     # close the cursor that we created only for this database
     finally:
         cursor.close()
         con.close()
 
+
 @app.route('/userHome')
 def userHome():
+    print 'Now at userHome with variable', session.get('user')
     if session.get('user'):
         return render_template('userHome.html')
     else:
@@ -123,18 +163,19 @@ def getWish():
             cursor = con.cursor()
             cursor.callproc('sp_GetWishByUser',(_user,))
             wishes = cursor.fetchall()
-            wishes_dict = []
+            wishes_list = []
             for wish in wishes:
                 wish_dict = {
                     'Id': wish[0],
                     'Title': wish[1],
                     'Description': wish[2],
-                    'Date': wish[4]}
-                wishes_dict.append(wish_dict)
-            return json.dumps(wishes_dict)
+                    'Date': str(wish[4])}   # to fix date time serialization error
+                wishes_list.append(wish_dict)
+            return json.dumps(wishes_list)
         else:
             return render_template('error.html', error = 'Unauthorized Access')
     except Exception as e:
+        print 'We have json err?', e
         return render_template('error.html', error = str(e))
 
 @app.route('/logout')
@@ -143,6 +184,4 @@ def logout():
     return redirect('/')
 
 if __name__ == '__main__':
-    app.run()
-    cursor.close()
-    conn.close()
+    app.run(host='localhost', port=7000, debug=True)

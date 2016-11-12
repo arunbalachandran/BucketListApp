@@ -13,25 +13,23 @@
               type: 'GET',
               success: function(res) {
                   var div = $('<div>')
-                      .attr('class', 'list-group')
-                      .append($('<a>')
-                          .attr('class', 'list-group-item active')
-                          .append($('<h4>')
-                              .attr('class', 'list-group-item-heading'),
-                              $('<p>')
-                              .attr('class', 'list-group-item-text')));
+                            .attr('class', 'list-group')
+                            .append($('<a>')
+                                .attr('class', 'list-group-item active')
+                                .append($('<h4>')
+                                    .attr('class', 'list-group-item-heading'),
+                                    $('<p>')
+                                    .attr('class', 'list-group-item-text')
+                                )
+                            );
                   var wishObj = JSON.parse(res);
-                  console.log(wishObj[0]); // debugging
-                  console.log('here i am');
                   var wish = '';
                   $.each(wishObj, function(index, value) {
                       wish = $(div).clone();
-                      console.log(wish);  // for debugging
                       $(wish).find('h4').text(value.Title);
                       $(wish).find('p').text(value.Description);
                       $('.jumbotron').append(wish);
                   });
-                  console.log(wish);  // for debugging
                   console.log(res);
               },
               error: function(error) {
@@ -59,12 +57,6 @@
           </div>
           <div class="jumbotron">
               <h1>Welcome Home !!</h1>
-              <!-- <div class="list-group"> -->
-                <!-- <a href="#" class="list-group-item active">
-                  <h4 class="list-group-item-heading">Wish Title</h4>
-                  <p class="list-group-item-text">Wish Description</p>
-                </a> -->
-              <!-- </div> -->
           </div>
           <footer class="footer">
               <p>&copy; MyStartup 2016</p>
