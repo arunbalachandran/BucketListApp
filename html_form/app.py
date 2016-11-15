@@ -57,6 +57,8 @@ def signUp():
 
 @app.route('/showSignIn')
 def showSignin():
+    print 'heelo'
+    sys.stdout.flush()
     return render_template('signin.html')
 
 @app.route('/validateLogin', methods=['POST'])
