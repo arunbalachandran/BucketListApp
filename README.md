@@ -17,6 +17,8 @@ export $(cat .env | xargs)
 5. The second step would be unnecessary because heroku automatically adds the
 CLEARDB_DATABASE_URL to the configuration.
 And if you mess up ...
+Don't forget to check the server for filename changes that may go untracked because
+Mac and Windows platforms are case insensitive when it comes to files.
 ```
 heroku config:unset SECRET_KEY
 heroku logs --source app
