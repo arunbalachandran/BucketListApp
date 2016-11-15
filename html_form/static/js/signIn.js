@@ -13,7 +13,7 @@ $(document).ready(function() {
                 success: function(result) {
                     console.log("Got login credentials here");
                     $('#signinForm').submit();
-                    window.location.href = "/userHome";
+                    // window.location.href = "/userHome";
                 },
                 error: function(error) {
                     $('#loginmail').show().fadeOut(4000);
