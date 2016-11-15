@@ -93,6 +93,7 @@ def validateLogin():
         conn.close()
     except Exception as err:
         print err, 'is the error'
+        sys.stdout.flush()
 
 @app.route('/userHome')
 def userHome():

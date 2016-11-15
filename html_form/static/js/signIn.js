@@ -12,7 +12,7 @@ $(document).ready(function() {
                 type: 'POST',
                 success: function(result) {
                     console.log("Got login credentials here");
-                    $('#signinForm').submit();
+                    // $('#signinForm').submit();
                     window.location.href = "/userHome";
                 },
                 error: function(error) {
