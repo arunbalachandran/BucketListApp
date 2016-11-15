@@ -57,8 +57,6 @@ def signUp():
 
 @app.route('/showSignIn')
 def showSignin():
-    print 'heelo'
-    sys.stdout.flush()
     return render_template('signin.html')
 
 @app.route('/validateLogin', methods=['POST'])
@@ -68,38 +66,28 @@ def validateLogin():
     _username = request.form['inputEmail']
     _password = request.form['inputPassword']
     # checks for the existence of a user
-    try:
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        cursor.callproc('sp_validateLogin', (_username,))
-        data = cursor.fetchall()
-        if (len(data) > 0):
-            if check_password_hash(str(data[0][3]), _password):
-                session['user'] = data[0][0]
-                print 'successful validation'
-                sys.stdout.flush()
-                return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
-            # not a valid password
-            else:
-                print 'insuccessful validation'
-                sys.stdout.flush()
-                return json.dumps({'error': True}), 400, {'ContentType':'application/json'}
-
-        # not a valid username
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.callproc('sp_validateLogin', (_username,))
+    data = cursor.fetchall()
+    if (len(data) > 0):
+        if check_password_hash(str(data[0][3]), _password):
+            session['user'] = data[0][0]
+            return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
+        # not a valid password
         else:
-            print 'cosuccessful validation'
-            sys.stdout.flush()
             return json.dumps({'error': True}), 400, {'ContentType':'application/json'}
-        # close the cursor that we created only for this database
-        cursor.close()
-        conn.close()
-    except Exception as err:
-        print err, 'is the error'
-        sys.stdout.flush()
+
+    # not a valid username
+    else:
+        return json.dumps({'error': True}), 400, {'ContentType':'application/json'}
+    # close the cursor that we created only for this database
+    cursor.close()
+    conn.close()
 
 @app.route('/userHome')
 def userHome():
-    print 'Now at userhome with variable', session.get('user')
+    # print 'Now at userhome with variable', session.get('user')
     if session.get('user'):
         return render_template('userhome.html')
     else:
