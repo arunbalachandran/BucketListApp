@@ -19,6 +19,8 @@ CLEARDB_DATABASE_URL to the configuration.
 And if you mess up ...
 ```
 heroku config:unset SECRET_KEY
+heroku logs --source app
+heroku run bash
 ```
 View list of procedures using
 ```
