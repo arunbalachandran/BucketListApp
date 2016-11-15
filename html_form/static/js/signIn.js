@@ -6,13 +6,13 @@ $(document).ready(function() {
     $('#btnSignIn').click(function() {
         if ((document.getElementById("inputEmail").value).length < 256) {
             console.log("Satisfies length constraint");
+            console.log("This is data===>>>"+$('form').serialize());
             $.ajax({
                 url: '/validateLogin',
                 data: $('form').serialize(),
                 type: 'POST',
                 success: function(result) {
                     console.log("Got login credentials here");
-                    // $('#signinForm').submit();
                     window.location.href = "/userHome";
                 },
                 error: function(error) {
