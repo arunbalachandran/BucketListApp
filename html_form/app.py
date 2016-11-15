@@ -73,13 +73,19 @@ def validateLogin():
     if (len(data) > 0):
         if check_password_hash(str(data[0][3]), _password):
             session['user'] = data[0][0]
+            print 'successful validation'
+            sys.stdout.flush()
             return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
         # not a valid password
         else:
+            print 'insuccessful validation'
+            sys.stdout.flush()
             return json.dumps({'error': True}), 400, {'ContentType':'application/json'}
 
     # not a valid username
     else:
+        print 'cosuccessful validation'
+        sys.stdout.flush()
         return json.dumps({'error': True}), 400, {'ContentType':'application/json'}
     # close the cursor that we created only for this database
     cursor.close()
