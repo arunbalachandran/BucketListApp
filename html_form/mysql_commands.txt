@@ -1,3 +1,12 @@
+# for a clean slate
+# execute these commands before re generating the table
+drop table tbl_user;
+drop table tbl_wish;
+drop procedure sp_addWish;
+drop procedure sp_createUser;
+drop procedure sp_GetWishByUser;
+drop procedure sp_validateLogin;
+
 # table creation ->
 # bigint signed has a max value of 9223372036854775807
 # assumptions -> username is unique as no one can have the same email id
