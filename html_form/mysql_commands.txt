@@ -5,7 +5,7 @@ drop table tbl_user;
 drop table tbl_wish;
 drop procedure sp_addWish;
 drop procedure sp_createUser;
-drop procedure sp_GetWishByUser;
+drop procedure sp_getWishByUser;
 drop procedure sp_validateLogin;
 
 # table creation ->
@@ -100,7 +100,7 @@ DELIMITER ;
 
 # this is a stored procedure for retrieving a wish
 DELIMITER $$
-CREATE PROCEDURE `sp_GetWishByUser` (
+CREATE PROCEDURE `sp_getWishByUser` (
 IN p_user_id bigint
 )
 BEGIN

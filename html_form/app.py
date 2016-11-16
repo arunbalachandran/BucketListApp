@@ -127,7 +127,7 @@ def getWish():
         # Connect to MySQL and fetch data
         conn = mysql.connect()
         cursor = conn.cursor()
-        cursor.callproc('sp_GetWishByUser',(_user,))
+        cursor.callproc('sp_getWishByUser',(_user,))
         wishes = cursor.fetchall()
         wishes_list = []
         for wish in wishes:
